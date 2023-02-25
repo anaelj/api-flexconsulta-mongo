@@ -1,0 +1,976 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Flex Consulta",
+    "description": "API para consultas",
+    "contact": {
+      "email": "ricardo@flexconsulta.com.br"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "description": "Produção",
+      "url": "https://api.flexconsulta.com.br/v1"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "sumary": "Login",
+        "description": "login de usuário",
+        "tags": [
+          "Login"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Login"
+                },
+                "examples": {
+                  "motorista": {
+                    "value": [
+                      {
+                        "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp.....",
+                        "scope": "",
+                        "expires_in": 86400,
+                        "token_type": "Bearer"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error"
+          }
+        }
+      }
+    },
+    "/motoristas": {
+      "get": {
+        "sumary": "Motoristas",
+        "description": "Lista cadastros de motorista",
+        "tags": [
+          "Motoristas"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "CPF do Motorista",
+            "name": "cpf",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "string",
+              "example": "00000000000"
+            }
+          },
+          {
+            "description": "Página",
+            "name": "page",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "number",
+              "example": "1",
+              "minimum": "1"
+            }
+          },
+          {
+            "description": "Paginação",
+            "name": "pagination",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "example": "10",
+              "default": "20",
+              "minimum": "1",
+              "maximum": "100"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Motoristas"
+                },
+                "examples": {
+                  "motorista": {
+                    "value": [
+                      {
+                        "id": 1,
+                        "cnpj": "00.000.000/0000-00",
+                        "razaosocial": "Transportes e Logística Ltda",
+                        "nomefantasia": "TLL",
+                        "nome_mot": "MARCOS DA SILVA",
+                        "cpf_mot": "00000000000",
+                        "status_motorista": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error"
+          }
+        }
+      }
+    },
+    "/proprietarios": {
+      "get": {
+        "sumary": "Proprietários",
+        "description": "Lista de cadastros de proprietários por CPF ou CNPJ",
+        "tags": [
+          "Proprietarios"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "CPF ou CNPJ do Proprietário",
+            "name": "cpfcnpj",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "string",
+              "example": "00000000000"
+            }
+          },
+          {
+            "description": "Página",
+            "name": "page",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "number",
+              "example": "1",
+              "minimum": "1"
+            }
+          },
+          {
+            "description": "Paginação",
+            "name": "pagination",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "example": "10",
+              "default": "20",
+              "minimum": "1",
+              "maximum": "100"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Proprietarios"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/veiculos": {
+      "get": {
+        "sumary": "Veículos",
+        "description": "Lista de cadastros de veículo",
+        "tags": [
+          "Veiculos"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "Placa do veículo",
+            "name": "placa",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "string",
+              "example": "HHH0000 ou AB123CD"
+            }
+          },
+          {
+            "description": "Página",
+            "name": "page",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "number",
+              "example": "1",
+              "minimum": "1"
+            }
+          },
+          {
+            "description": "Paginação",
+            "name": "pagination",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "example": "10",
+              "default": "20",
+              "minimum": "1",
+              "maximum": "100"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Veiculos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/viagens": {
+      "get": {
+        "sumary": "Viagens",
+        "description": "lista de viagens por motorista",
+        "tags": [
+          "Viagens"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "CPF do Motorista",
+            "name": "motorista",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "description": "CPF do Proprietario",
+            "name": "proprietario",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "description": "Placa do veículo",
+            "name": "veiculo",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "description": "Página",
+            "name": "page",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "number",
+              "example": "1",
+              "minimum": "1"
+            }
+          },
+          {
+            "description": "Paginação",
+            "name": "pagination",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "example": "10",
+              "default": "20",
+              "minimum": "1",
+              "maximum": "100"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Viagens"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validacaocnh/formulario": {
+      "post": {
+        "sumary": "Criação nova validação do CNH",
+        "description": "Criar nova validação de CNH",
+        "tags": [
+          "Validação CNH"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/Nova Validação do CNH"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Resposta novo processo"
+                },
+                "examples": {
+                  "value": {
+                    "token": "MVCNHEXT761F19BEFD1673965918339",
+                    "data": "2023-01-17T14:31:59.700Z",
+                    "status": "0"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error"
+          }
+        }
+      }
+    },
+    "/validacaocnh/processo": {
+      "get": {
+        "sumary": "Validação CNH",
+        "description": "Seleção de processo criados pelos clientes",
+        "tags": [
+          "Validação CNH"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "Token do processo",
+            "name": "token",
+            "in": "query",
+            "required": "true",
+            "schema": {
+              "type": "string",
+              "example": "MVCNHEXTA1B2C3D4E51234567890124"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Resposta Validação CNH"
+                },
+                "examples": {
+                  "value": {
+                    "data_validacao": "YYYY-MM-DD",
+                    "data_resposta": "YYYY-MM-DD",
+                    "status_requisicao": "number",
+                    "resposta_request": {
+                      "nome_motorista": {
+                        "value": "bolean",
+                        "similaridade": "number"
+                      },
+                      "numero_cnh": "bolean",
+                      "dt_ultima_emissao_cnh": "bolean",
+                      "dt_primeira_cnh": "bolean",
+                      "observacao_cnh": {
+                        "value": "bolean",
+                        "similaridade": "number"
+                      },
+                      "registro_nacional_estrangeiro_cnh": "boolean",
+                      "dt_validade_cnh": "bolean",
+                      "tipo_documento": "bolean",
+                      "numero_documento": {
+                        "value": "bolean",
+                        "similaridade": "number"
+                      },
+                      "orgao_expedidor": "bolean",
+                      "uf_expedidor": "bolean",
+                      "categoria_cnh": "bolean",
+                      "dt_nascimento_motorista": "bolean",
+                      "nome_pai": {
+                        "value": "bolean",
+                        "similaridade": "number"
+                      },
+                      "nome_mae": {
+                        "value": "bolean",
+                        "similaridade": "number"
+                      },
+                      "nacionalidade_motorista": false,
+                      "sexo_motorista": "bolean",
+                      "possui_impedimento_cnh": "bolean",
+                      "cnh_emitida": "bolean",
+                      "cpf_motorista_regular": "bolean",
+                      "cpf_motorista_disponivel": "bolean",
+                      "foto_motorista": {
+                        "disponivel": "bolean",
+                        "probabilidade": "string",
+                        "similaridade": "float"
+                      }
+                    },
+                    "token_request": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "expires_in": {
+            "type": "number"
+          },
+          "token_type": {
+            "type": "string"
+          }
+        }
+      },
+      "Motoristas": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "razaosocial": {
+            "type": "string"
+          },
+          "nomefantasia": {
+            "type": "string"
+          },
+          "nome_mot": {
+            "type": "string"
+          },
+          "cpf_mot": {
+            "type": "string"
+          },
+          "status_motorista": {
+            "type": "number",
+            "examples": {
+              "0": "0",
+              "1": "1",
+              "2": "2"
+            }
+          }
+        }
+      },
+      "Proprietarios": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "razaosocial": {
+            "type": "string"
+          },
+          "nomefantasia": {
+            "type": "string"
+          },
+          "nome_prop": {
+            "type": "string"
+          },
+          "cpf_cnpj_prop": {
+            "type": "string"
+          },
+          "status_proprietario": {
+            "type": "number",
+            "examples": {
+              "0": "0",
+              "1": "1",
+              "2": "2"
+            }
+          }
+        }
+      },
+      "Veiculos": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "razaosocial": {
+            "type": "string"
+          },
+          "nomefantasia": {
+            "type": "string"
+          },
+          "placa": {
+            "type": "string"
+          },
+          "status_veiculo": {
+            "type": "number",
+            "examples": {
+              "0": "0",
+              "1": "1",
+              "2": "2"
+            }
+          }
+        }
+      },
+      "Viagens": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "dt_viagem": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "mercadoria": {
+            "type": "string"
+          },
+          "cidade_origem": {
+            "type": "string"
+          },
+          "cidade_destino": {
+            "type": "string"
+          },
+          "carreta1": {
+            "type": "string"
+          },
+          "carreta2": {
+            "type": "string"
+          },
+          "carreta3": {
+            "type": "string"
+          },
+          "carreta4": {
+            "type": "string"
+          },
+          "idmotorista": {
+            "type": "number"
+          },
+          "nome_mot": {
+            "type": "string"
+          },
+          "cpf_mot": {
+            "type": "string"
+          },
+          "idveiculo": {
+            "type": "string"
+          },
+          "placa": {
+            "type": "string"
+          },
+          "idproprietario": {
+            "type": "number"
+          },
+          "nome_prop": {
+            "type": "string"
+          },
+          "cpf_cnpj_prop": {
+            "type": "string"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "razaosocial": {
+            "type": "string"
+          },
+          "nomefantasia": {
+            "type": "string"
+          },
+          "status_motorista": {
+            "type": "number",
+            "examples": {
+              "0": "0",
+              "1": "1",
+              "2": "2"
+            }
+          }
+        }
+      },
+      "Nova Validação do CNH": {
+        "type": "object",
+        "properties": {
+          "nome_motorista": {
+            "type": "string"
+          },
+          "cpf_motorista": {
+            "type": "string"
+          },
+          "numero_cnh": {
+            "type": "string"
+          },
+          "dt_ultima_emissao_cnh": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dt_primeira_cnh": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "observacao_cnh": {
+            "type": "string"
+          },
+          "registro_nacional_estrangeiro_cnh": {
+            "type": "boolean"
+          },
+          "dt_validade_cnh": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tipo_documento": {
+            "type": "string",
+            "examples": {
+              "1": "Carteira de identidade",
+              "2": "Carteira profissional",
+              "3": "Passaporte",
+              "4": "Carteira de reservista"
+            }
+          },
+          "numero_documento": {
+            "type": "string"
+          },
+          "orgao_expedidor": {
+            "type": "string"
+          },
+          "uf_expedidor": {
+            "type": "string",
+            "examples": [
+              "AC",
+              "AL",
+              "AM",
+              "AP",
+              "BA",
+              "CE",
+              "DF",
+              "ES",
+              "GO",
+              "MA",
+              "MT",
+              "MS",
+              "MG",
+              "PA",
+              "PB",
+              "PR",
+              "PE",
+              "PI",
+              "RJ",
+              "RN",
+              "RS",
+              "RO",
+              "RR",
+              "SC",
+              "SP",
+              "SE",
+              "TO"
+            ]
+          },
+          "categoria_cnh": {
+            "type": "string",
+            "examples": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "AB",
+              "AC",
+              "AD",
+              "AE"
+            ]
+          },
+          "dt_nascimento_motorista": {
+            "type": "string"
+          },
+          "nome_pai": {
+            "type": "string"
+          },
+          "nome_mae": {
+            "type": "string"
+          },
+          "nacionalidade_motorista": {
+            "type": "string",
+            "examples": {
+              "1": "Brasileiro",
+              "2": "Brasileiro naturalizado",
+              "3": "Estrangeiro",
+              "4": "Brasileiro nascido no exterior"
+            }
+          },
+          "sexo_motorista": {
+            "type": "string",
+            "examples": {
+              "M": "Masculino",
+              "F": "Feminino"
+            }
+          },
+          "foto_motorista": {
+            "type": "string",
+            "examples": "Formato Base64"
+          }
+        }
+      },
+      "Resposta novo processo": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "format": "number",
+            "examples": {
+              "0": "Aguardando validação",
+              "1": "Concluído"
+            }
+          }
+        }
+      },
+      "Resposta Validação CNH": {
+        "type": "object",
+        "properties": {
+          "data_validacao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data_resposta": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status_requisicao": {
+            "type": "string",
+            "format": "number",
+            "examples": {
+              "0": "Aguardando validação",
+              "1": "Concluído"
+            }
+          },
+          "resposta_request": {
+            "type": "object",
+            "properties": {
+              "numero_cnh": {
+                "type": "boolean"
+              },
+              "dt_ultima_emissao_cnh": {
+                "type": "boolean"
+              },
+              "dt_primeira_cnh": {
+                "type": "boolean"
+              },
+              "nome_motorista": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "boolean"
+                  },
+                  "similaridade": {
+                    "type": "number"
+                  }
+                }
+              },
+              "observacao_cnh": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "boolean"
+                  },
+                  "similaridade": {
+                    "type": "number"
+                  }
+                }
+              },
+              "numero_documento": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "boolean"
+                  },
+                  "similaridade": {
+                    "type": "number"
+                  }
+                }
+              },
+              "nome_pai": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "boolean"
+                  },
+                  "similaridade": {
+                    "type": "number"
+                  }
+                }
+              },
+              "nome_mae": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "boolean"
+                  },
+                  "similaridade": {
+                    "type": "number"
+                  }
+                }
+              },
+              "registro_nacional_estrangeiro_cnh": {
+                "type": "boolean"
+              },
+              "dt_validade_cnh": {
+                "type": "boolean"
+              },
+              "tipo_documento": {
+                "type": "boolean"
+              },
+              "orgao_expedidor": {
+                "type": "boolean"
+              },
+              "uf_expedidor": {
+                "type": "boolean"
+              },
+              "categoria_cnh": {
+                "type": "boolean"
+              },
+              "dt_nascimento_motorista": {
+                "type": "boolean"
+              },
+              "nacionalidade_motorista": {
+                "type": "boolean"
+              },
+              "sexo_motorista": {
+                "type": "boolean"
+              },
+              "possui_impedimento_cnh": {
+                "type": "boolean"
+              },
+              "cnh_emitida": {
+                "type": "boolean"
+              },
+              "cpf_motorista_regular": {
+                "type": "boolean"
+              },
+              "cpf_motorista_disponivel": {
+                "type": "boolean"
+              },
+              "foto_motorista": {
+                "type": "object",
+                "properties": {
+                  "disponivel": {
+                    "type": "boolean"
+                  },
+                  "probabilidade": {
+                    "type": "string"
+                  },
+                  "similaridade": {
+                    "type": "number",
+                    "format": "float"
+                  }
+                }
+              }
+            }
+          },
+          "token_request": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -1,0 +1,359 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client1"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_1")
+}
+
+model SequelizeMeta {
+  name String @id @db.VarChar(255)
+}
+
+model clientes {
+  id                            Int                             @id @default(autoincrement())
+  cnpj                          String                          @unique @db.VarChar(255)
+  razaosocial                   String                          @unique @db.VarChar(255)
+  nomefantasia                  String                          @db.VarChar(255)
+  telefone                      String?                         @db.VarChar(255)
+  email                         String                          @unique @db.VarChar(255)
+  photo                         String?
+  ativo                         Boolean                         @default(true)
+  dt_criacao                    DateTime                        @db.Timestamptz(6)
+  dt_atualizacao                DateTime                        @db.Timestamptz(6)
+  contatos_motoristas           contatos_motoristas[]
+  reg_temporarios_motoristas    reg_temporarios_motoristas[]
+  reg_temporarios_proprietarios reg_temporarios_proprietarios[]
+  reg_temporarios_veiculos      reg_temporarios_veiculos[]
+  reg_temporarios_viagens       reg_temporarios_viagens[]
+  status_motoristas             status_motoristas[]
+  status_proprietarios          status_proprietarios[]
+  status_veiculos               status_veiculos[]
+  viagens                       viagens[]
+}
+
+model contatos_motoristas {
+  id             Int         @id @default(autoincrement())
+  idmotorista    BigInt
+  idcliente      BigInt
+  contato        String      @db.VarChar(255)
+  tipo_contato   String      @db.VarChar(255)
+  dt_criacao     DateTime    @db.Timestamptz(6)
+  dt_atualizacao DateTime    @db.Timestamptz(6)
+  clientes       clientes?   @relation(fields: [clientesId], references: [id])
+  clientesId     Int?
+  motoristas     motoristas? @relation(fields: [motoristasId], references: [id])
+  motoristasId   Int?
+
+  @@index([idmotorista], map: "idx_st_contatos_motoristas")
+}
+
+model motoristas {
+  id                   Int                   @id @default(autoincrement())
+  nome_mot             String                @db.VarChar(255)
+  cpf_mot              String                @unique(map: "idx_cpf_mot") @db.VarChar(255)
+  cnh_mot              String?               @db.VarChar(255)
+  nome_pai             String?               @db.VarChar(255)
+  nome_mae             String?               @db.VarChar(255)
+  categoria_cnh_mot    String?               @db.VarChar(255)
+  cod_situacao_cnh_mot String?               @db.VarChar(255)
+  dt_validade_cnh      DateTime?             @db.Timestamptz(6)
+  dt_emissao_cnh       DateTime?             @db.Timestamptz(6)
+  dt_primeira_cnh      DateTime?             @db.Timestamptz(6)
+  dt_nascimento        DateTime?             @db.Timestamptz(6)
+  foto_motorista       String?
+  ativo                Boolean               @default(true)
+  cadastro_verificado  Boolean               @default(false)
+  dt_criacao           DateTime              @db.Timestamptz(6)
+  dt_atualizacao       DateTime              @db.Timestamptz(6)
+  contatos_motoristas  contatos_motoristas[]
+  status_motoristas    status_motoristas[]
+  viagens              viagens[]
+}
+
+model proprietarios {
+  id                   Int                    @id @default(autoincrement())
+  nome_prop            String                 @db.VarChar(255)
+  antt_prop            String?                @db.VarChar(255)
+  status_antt          String?                @db.VarChar(255)
+  dt_validade_antt     DateTime?              @db.Timestamptz(6)
+  cpf_cnpj_prop        String                 @unique(map: "idx_cpf_cnpj_prop") @db.VarChar(255)
+  ativo                Boolean                @default(true)
+  cadastro_verificado  Boolean                @default(false)
+  dt_criacao           DateTime               @db.Timestamptz(6)
+  dt_atualizacao       DateTime               @db.Timestamptz(6)
+  status_proprietarios status_proprietarios[]
+  viagens              viagens[]
+}
+
+model reg_temporarios_motoristas {
+  id             Int       @id @default(autoincrement())
+  cpf_mot        String?   @db.VarChar(255)
+  idcliente      BigInt
+  tipo_erro      String
+  lote_arquivo   String?   @db.VarChar(255)
+  message        String
+  dados          String
+  dt_criacao     DateTime  @db.Timestamptz(6)
+  dt_atualizacao DateTime  @db.Timestamptz(6)
+  clientes       clientes? @relation(fields: [clientesId], references: [id])
+  clientesId     Int?
+
+  @@index([cpf_mot], map: "idx_reg_temporario_motoristas")
+}
+
+model reg_temporarios_proprietarios {
+  id             Int       @id @default(autoincrement())
+  cpf_cnpj_prop  String?   @db.VarChar(255)
+  idcliente      BigInt
+  lote_arquivo   String?   @db.VarChar(255)
+  tipo_erro      String
+  message        String
+  dados          String
+  dt_criacao     DateTime  @db.Timestamptz(6)
+  dt_atualizacao DateTime  @db.Timestamptz(6)
+  clientes       clientes? @relation(fields: [clientesId], references: [id])
+  clientesId     Int?
+
+  @@index([cpf_cnpj_prop], map: "idx_reg_temporario_proprietarios")
+}
+
+model reg_temporarios_veiculos {
+  id             Int       @id @default(autoincrement())
+  placa          String?   @db.VarChar(255)
+  idcliente      BigInt
+  tipo_erro      String
+  lote_arquivo   String?   @db.VarChar(255)
+  message        String
+  dados          String
+  dt_criacao     DateTime  @db.Timestamptz(6)
+  dt_atualizacao DateTime  @db.Timestamptz(6)
+  clientes       clientes? @relation(fields: [clientesId], references: [id])
+  clientesId     Int?
+
+  @@index([placa], map: "idx_reg_temporario_veiculos")
+}
+
+model reg_temporarios_viagens {
+  id             Int       @id @default(autoincrement())
+  numero_cliente String?   @db.VarChar(255)
+  idcliente      BigInt
+  tipo_erro      String
+  lote_arquivo   String?   @db.VarChar(255)
+  message        String
+  dados          String
+  dt_criacao     DateTime  @db.Timestamptz(6)
+  dt_atualizacao DateTime  @db.Timestamptz(6)
+  clientes       clientes? @relation(fields: [clientesId], references: [id])
+  clientesId     Int?
+
+  @@index([idcliente], map: "idx_reg_temporario_viagens")
+}
+
+model status_motoristas {
+  id               Int                   @id @default(autoincrement())
+  idmotorista      BigInt
+  idcliente        BigInt
+  dt_cliente       DateTime              @db.Timestamptz(6)
+  numero_cliente   String?               @db.VarChar(255)
+  lote_arquivo     String?               @db.VarChar(255)
+  status_motorista enum_status_motorista
+  dt_criacao       DateTime              @db.Timestamptz(6)
+  dt_atualizacao   DateTime              @db.Timestamptz(6)
+  clientes         clientes?             @relation(fields: [clientesId], references: [id])
+  clientesId       Int?
+  motoristas       motoristas?           @relation(fields: [motoristasId], references: [id])
+  motoristasId     Int?
+
+  @@unique([idmotorista, idcliente], map: "const_unique_stmot")
+  @@index([idmotorista], map: "idx_st_motoristas")
+}
+
+model status_proprietarios {
+  id                  Int                      @id @default(autoincrement())
+  idproprietario      BigInt
+  idcliente           BigInt
+  lote_arquivo        String?                  @db.VarChar(255)
+  dt_cliente          DateTime                 @db.Timestamptz(6)
+  numero_cliente      String?                  @db.VarChar(255)
+  status_proprietario enum_status_proprietario
+  dt_criacao          DateTime                 @db.Timestamptz(6)
+  dt_atualizacao      DateTime                 @db.Timestamptz(6)
+  clientes            clientes?                @relation(fields: [clientesId], references: [id])
+  clientesId          Int?
+  proprietarios       proprietarios?           @relation(fields: [proprietariosId], references: [id])
+  proprietariosId     Int?
+
+  @@unique([idproprietario, idcliente], map: "const_unique_stprop")
+  @@index([idproprietario], map: "idx_st_proprietarios")
+}
+
+model status_veiculos {
+  id             Int                 @id @default(autoincrement())
+  idveiculo      BigInt
+  idcliente      BigInt
+  lote_arquivo   String?             @db.VarChar(255)
+  dt_cliente     DateTime            @db.Timestamptz(6)
+  numero_cliente String?             @db.VarChar(255)
+  status_veiculo enum_status_veiculo
+  dt_criacao     DateTime            @db.Timestamptz(6)
+  dt_atualizacao DateTime            @db.Timestamptz(6)
+  clientes       clientes?           @relation(fields: [clientesId], references: [id])
+  clientesId     Int?
+  veiculos       veiculos?           @relation(fields: [veiculosId], references: [id])
+  veiculosId     Int?
+
+  @@unique([idveiculo, idcliente], map: "const_unique_stpveic")
+  @@index([idveiculo], map: "idx_st_veiculos")
+}
+
+model veiculos {
+  id                  Int               @id @default(autoincrement())
+  placa               String            @unique(map: "idx_placa_veic") @db.VarChar(255)
+  renavam             String?           @db.VarChar(255)
+  ativo               Boolean           @default(true)
+  cadastro_verificado Boolean           @default(false)
+  dt_criacao          DateTime          @db.Timestamptz(6)
+  dt_atualizacao      DateTime          @db.Timestamptz(6)
+  status_veiculos     status_veiculos[]
+  viagens             viagens[]
+}
+
+model viagens {
+  id               Int            @id @default(autoincrement())
+  idcliente        Int
+  numero_cliente   String         @db.VarChar(255)
+  dt_viagem        DateTime       @db.Timestamptz(6)
+  mercadoria       String         @db.VarChar(255)
+  cidade_origem    String         @db.VarChar(255)
+  cidade_destino   String         @db.VarChar(255)
+  idmotorista      BigInt
+  idproprietario   BigInt
+  idveiculo        BigInt
+  carreta1         String?        @db.VarChar(255)
+  carreta2         String?        @db.VarChar(255)
+  carreta3         String?        @db.VarChar(255)
+  carreta4         String?        @db.VarChar(255)
+  viagem_cancelado enum_viagem    @default(N)
+  dt_cancelamento  DateTime?      @db.Timestamptz(6)
+  dt_cliente       DateTime       @db.Timestamptz(6)
+  dt_criacao       DateTime       @db.Timestamptz(6)
+  dt_atualizacao   DateTime       @db.Timestamptz(6)
+  clientes         clientes       @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  motoristas       motoristas?    @relation(fields: [motoristasId], references: [id])
+  motoristasId     Int?
+  proprietarios    proprietarios? @relation(fields: [proprietariosId], references: [id])
+  proprietariosId  Int?
+  veiculos         veiculos?      @relation(fields: [veiculosId], references: [id])
+  veiculosId       Int?
+
+  @@unique([numero_cliente, idcliente], map: "const_unique_viagens")
+}
+
+model VwVeiculos {
+  id             Int                 @id
+  cnpj           String
+  razaosocial    String
+  nomefantasia   String
+  placa          String
+  status_veiculo enum_status_veiculo
+
+  @@map("vwstatusveiculos")
+}
+
+model logApiRequestValidacaoCNH {
+  id                 Int       @id @default(autoincrement())
+  data_validacao     DateTime  @db.Timestamptz(6)
+  data_resposta      DateTime? @db.Timestamptz(6)
+  cpf_motorista      String    @db.VarChar(255)
+  nome_motorista     String    @db.VarChar(255)
+  email_usuario      String    @db.VarChar(255)
+  status_requisicao  String    @db.VarChar(1)
+  link_photo         String    @db.Text
+  formulario_request String    @db.Text
+  resposta_request   String?   @db.Text
+  token_request      String    @db.VarChar(255)
+  tipo_request       String    @db.VarChar(255)
+  nome_cliente       String
+  cnpj_cliente       String
+  dt_criacao         DateTime  @db.Timestamptz(6)
+  dt_atualizacao     DateTime  @db.Timestamptz(6)
+
+  @@map("logs_validacao_cnh_acesso_externo")
+}
+
+model VwViagens {
+  id        Int      @id
+  dt_viagem DateTime
+
+  mercadoria       String?
+  cidade_origem    String?
+  cidade_destino   String?
+  carreta1         String?
+  carreta2         String?
+  carreta3         String?
+  carreta4         String?
+  idmotorista      Int
+  nome_mot         String
+  cpf_mot          String
+  idveiculo        Int
+  placa            String
+  idproprietario   Int
+  nome_prop        String
+  cpf_cnpj_prop    String
+  cnpj             String
+  razaosocial      String?
+  nomefantasia     String?
+  status_motorista enum_status_motorista?
+
+  @@map("vwapiviagens")
+}
+
+model VwMotoristas {
+  id               Int                   @id
+  cnpj             String
+  razaosocial      String?
+  nomefantasia     String?
+  nome_mot         String
+  cpf_mot          String
+  status_motorista enum_status_motorista
+
+  @@map("vwstatusmotoristas")
+}
+
+model VwProprietarios {
+  id                  Int                      @id
+  cnpj                String
+  razaosocial         String?
+  nomefantasia        String?
+  nome_prop           String
+  cpf_cnpj_prop       String
+  status_proprietario enum_status_proprietario
+
+  @@map("vwstatusproprietarios")
+}
+
+enum enum_status_motorista {
+  Ativo     @map("0")
+  Vencido   @map("1")
+  Bloqueado @map("2")
+}
+
+enum enum_status_proprietario {
+  Ativo     @map("0")
+  Vencido   @map("1")
+  Bloqueado @map("2")
+}
+
+enum enum_status_veiculo {
+  Ativo     @map("0")
+  Vencido   @map("1")
+  Bloqueado @map("2")
+}
+
+enum enum_viagem {
+  N
+  S
+}
