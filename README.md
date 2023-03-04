@@ -7,7 +7,7 @@
 #redis-cli flushall
 
 iniciar o redis por redis-stack-server
-redis-stack-server --port 6380
+redis-stack-server --port 6377
 
 text - maches
 string - equals

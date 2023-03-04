@@ -5,33 +5,25 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL_1")
-}
-
-model SequelizeMeta {
-  name String @id @db.VarChar(255)
+  url      = env("DATABASE_URL_PG")
 }
 
 model clientes {
-  id                            Int                             @id @default(autoincrement())
-  cnpj                          String                          @unique @db.VarChar(255)
-  razaosocial                   String                          @unique @db.VarChar(255)
-  nomefantasia                  String                          @db.VarChar(255)
-  telefone                      String?                         @db.VarChar(255)
-  email                         String                          @unique @db.VarChar(255)
-  photo                         String?
-  ativo                         Boolean                         @default(true)
-  dt_criacao                    DateTime                        @db.Timestamptz(6)
-  dt_atualizacao                DateTime                        @db.Timestamptz(6)
-  contatos_motoristas           contatos_motoristas[]
-  reg_temporarios_motoristas    reg_temporarios_motoristas[]
-  reg_temporarios_proprietarios reg_temporarios_proprietarios[]
-  reg_temporarios_veiculos      reg_temporarios_veiculos[]
-  reg_temporarios_viagens       reg_temporarios_viagens[]
-  status_motoristas             status_motoristas[]
-  status_proprietarios          status_proprietarios[]
-  status_veiculos               status_veiculos[]
-  viagens                       viagens[]
+  id                   Int                    @id @default(autoincrement())
+  cnpj                 String                 @unique @db.VarChar(255)
+  razaosocial          String                 @unique @db.VarChar(255)
+  nomefantasia         String                 @db.VarChar(255)
+  telefone             String?                @db.VarChar(255)
+  email                String                 @unique @db.VarChar(255)
+  photo                String?
+  ativo                Boolean                @default(true)
+  dt_criacao           DateTime               @db.Timestamptz(6)
+  dt_atualizacao       DateTime               @db.Timestamptz(6)
+  contatos_motoristas  contatos_motoristas[]
+  status_motoristas    status_motoristas[]
+  status_proprietarios status_proprietarios[]
+  status_veiculos      status_veiculos[]
+  viagens              viagens[]
 }
 
 model contatos_motoristas {
@@ -86,70 +78,6 @@ model proprietarios {
   dt_atualizacao       DateTime               @db.Timestamptz(6)
   status_proprietarios status_proprietarios[]
   viagens              viagens[]
-}
-
-model reg_temporarios_motoristas {
-  id             Int       @id @default(autoincrement())
-  cpf_mot        String?   @db.VarChar(255)
-  idcliente      BigInt
-  tipo_erro      String
-  lote_arquivo   String?   @db.VarChar(255)
-  message        String
-  dados          String
-  dt_criacao     DateTime  @db.Timestamptz(6)
-  dt_atualizacao DateTime  @db.Timestamptz(6)
-  clientes       clientes? @relation(fields: [clientesId], references: [id])
-  clientesId     Int?
-
-  @@index([cpf_mot], map: "idx_reg_temporario_motoristas")
-}
-
-model reg_temporarios_proprietarios {
-  id             Int       @id @default(autoincrement())
-  cpf_cnpj_prop  String?   @db.VarChar(255)
-  idcliente      BigInt
-  lote_arquivo   String?   @db.VarChar(255)
-  tipo_erro      String
-  message        String
-  dados          String
-  dt_criacao     DateTime  @db.Timestamptz(6)
-  dt_atualizacao DateTime  @db.Timestamptz(6)
-  clientes       clientes? @relation(fields: [clientesId], references: [id])
-  clientesId     Int?
-
-  @@index([cpf_cnpj_prop], map: "idx_reg_temporario_proprietarios")
-}
-
-model reg_temporarios_veiculos {
-  id             Int       @id @default(autoincrement())
-  placa          String?   @db.VarChar(255)
-  idcliente      BigInt
-  tipo_erro      String
-  lote_arquivo   String?   @db.VarChar(255)
-  message        String
-  dados          String
-  dt_criacao     DateTime  @db.Timestamptz(6)
-  dt_atualizacao DateTime  @db.Timestamptz(6)
-  clientes       clientes? @relation(fields: [clientesId], references: [id])
-  clientesId     Int?
-
-  @@index([placa], map: "idx_reg_temporario_veiculos")
-}
-
-model reg_temporarios_viagens {
-  id             Int       @id @default(autoincrement())
-  numero_cliente String?   @db.VarChar(255)
-  idcliente      BigInt
-  tipo_erro      String
-  lote_arquivo   String?   @db.VarChar(255)
-  message        String
-  dados          String
-  dt_criacao     DateTime  @db.Timestamptz(6)
-  dt_atualizacao DateTime  @db.Timestamptz(6)
-  clientes       clientes? @relation(fields: [clientesId], references: [id])
-  clientesId     Int?
-
-  @@index([idcliente], map: "idx_reg_temporario_viagens")
 }
 
 model status_motoristas {
@@ -261,27 +189,6 @@ model VwVeiculos {
   status_veiculo enum_status_veiculo
 
   @@map("vwstatusveiculos")
-}
-
-model logApiRequestValidacaoCNH {
-  id                 Int       @id @default(autoincrement())
-  data_validacao     DateTime  @db.Timestamptz(6)
-  data_resposta      DateTime? @db.Timestamptz(6)
-  cpf_motorista      String    @db.VarChar(255)
-  nome_motorista     String    @db.VarChar(255)
-  email_usuario      String    @db.VarChar(255)
-  status_requisicao  String    @db.VarChar(1)
-  link_photo         String    @db.Text
-  formulario_request String    @db.Text
-  resposta_request   String?   @db.Text
-  token_request      String    @db.VarChar(255)
-  tipo_request       String    @db.VarChar(255)
-  nome_cliente       String
-  cnpj_cliente       String
-  dt_criacao         DateTime  @db.Timestamptz(6)
-  dt_atualizacao     DateTime  @db.Timestamptz(6)
-
-  @@map("logs_validacao_cnh_acesso_externo")
 }
 
 model VwViagens {

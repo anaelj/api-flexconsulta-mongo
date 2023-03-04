@@ -13,7 +13,10 @@ export class ModelViagens {
     });
   }
 
-  async findByAnyField(field, value) {
+  async findByAnyField({ field, value, page }) {
+    let take = Number(process.env.DEFAULT_PAGINATION);
+    let skip = page ? (page - 1) * take : 0;
+
     let where;
     console.log(field);
     switch (field) {
@@ -30,10 +33,13 @@ export class ModelViagens {
         break;
     }
 
-    console.log("where", where);
-
     return await prisma.VwViagens.findMany({
+      take,
+      skip,
       where,
+      orderBy: {
+        id: "asc",
+      },
     });
   }
 }

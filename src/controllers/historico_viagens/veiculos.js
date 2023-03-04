@@ -1,33 +1,26 @@
 import redisClient from "../../database/redisClient";
 import { ModelVeiculos } from "../../models/views/vwVeiculos";
-import { makeGenericLog } from "../../share/make-history/generic.history";
 
 export class CreateVeiculosController {
   async getVeiculos(request, response, next) {
-    const { placa } = request.query;
-    const { authorization } = request.headers;
+    const { placa, page } = request.query;
 
     try {
-      if (!placa) throw new Error("invalid request!");
+      if (!placa) throw new Error("PLACA is required!");
+      if (!page) throw new Error("PAGE is required!");
 
-      const key = `veiculos-${placa}`;
+      const key = `veiculos-${placa}-${page}`;
 
       let veiculosData;
       veiculosData = await redisClient.get(key);
 
       if (!veiculosData) {
         let modelVeiculos = new ModelVeiculos();
-        veiculosData = await modelVeiculos.findByPlaca(placa);
+        veiculosData = await modelVeiculos.findByPlaca({ placa, page });
         if (veiculosData.length > 0)
           await redisClient.set(key, JSON.stringify(veiculosData), 60000);
         modelVeiculos = null;
       }
-      await makeGenericLog({
-        authorization,
-        data: veiculosData,
-        palavra_pesquisa: JSON.stringify(request.query),
-        tipo_pesquisa: request.path.replace("/", ""),
-      });
 
       return response
         .status(200)
