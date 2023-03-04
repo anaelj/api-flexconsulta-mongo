@@ -12,6 +12,7 @@ export class CreateMotoristasController {
       const key = `motoristas-${cpf}-${page}`;
 
       let motoristasData;
+      await redisClient.connect();
       motoristasData = await redisClient.get(key);
 
       if (!motoristasData) {
@@ -25,7 +26,7 @@ export class CreateMotoristasController {
           await redisClient.set(key, JSON.stringify(motoristasData), 60000);
         modelMotoristas = null;
       }
-
+      await redisClient.disconnect();
       return response
         .status(200)
         .send(

@@ -12,6 +12,7 @@ export class CreateVeiculosController {
       const key = `veiculos-${placa}-${page}`;
 
       let veiculosData;
+      await redisClient.connect();
       veiculosData = await redisClient.get(key);
 
       if (!veiculosData) {
@@ -22,6 +23,7 @@ export class CreateVeiculosController {
         modelVeiculos = null;
       }
 
+      await redisClient.disconnect();
       return response
         .status(200)
         .send(veiculosData.length > 0 ? veiculosData : { message: "no data" });

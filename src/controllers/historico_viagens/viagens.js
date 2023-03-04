@@ -33,6 +33,7 @@ export class CreateViagensController {
 
       const key = `viagens-${field}-${value}-${page}`;
       let viagensData;
+      await redisClient.connect();
 
       viagensData = await redisClient.get(key);
 
@@ -43,6 +44,8 @@ export class CreateViagensController {
           await redisClient.set(key, JSON.stringify(viagensData), 60000);
         modelViagens = null;
       }
+
+      await redisClient.disconnect();
 
       return response
         .status(200)

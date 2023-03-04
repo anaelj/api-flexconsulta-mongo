@@ -12,6 +12,7 @@ export class CreateProprietariosController {
       const key = `proprietarios-${cpfcnpj}-${page}`;
 
       let proprietariosData;
+      await redisClient.connect();
       proprietariosData = await redisClient.get(key);
 
       if (!proprietariosData) {
@@ -25,6 +26,7 @@ export class CreateProprietariosController {
         modelProprietarios = null;
       }
 
+      await redisClient.disconnect();
       return response
         .status(200)
         .send(
