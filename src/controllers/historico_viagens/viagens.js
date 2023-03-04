@@ -1,12 +1,9 @@
 import redisClient from "../../database/redisClient";
 import { ModelViagens } from "../../models/views/vwViagens";
-import { makeGenericLog } from "../../share/make-history/generic.history";
 
 export class CreateViagensController {
   async getViagens(request, response, next) {
-    const { motorista, proprietario, veiculo, page, pagination } =
-      request.query;
-    const { authorization } = request.headers;
+    const { motorista, proprietario, veiculo, page } = request.query;
 
     try {
       const field = motorista
@@ -17,7 +14,9 @@ export class CreateViagensController {
         ? "placa"
         : null;
 
-      if (!field) throw new Error("Filtro inválido");
+      if (!page) throw new Error("PAGE is required!");
+      if (!field)
+        throw new Error("Filtro inválido motorista, proprietario, or veiculo");
       if (motorista && proprietario)
         throw new Error("Informe apenas um parâmetro!");
       if (motorista && veiculo) throw new Error("Informe apenas um parâmetro!");
@@ -32,26 +31,21 @@ export class CreateViagensController {
         ? veiculo
         : null;
 
-      const key = `viagens-${field}-${value}`;
-      console.log(key);
-
+      const key = `viagens-${field}-${value}-${page}`;
       let viagensData;
+      await redisClient.connect();
+
       viagensData = await redisClient.get(key);
 
       if (!viagensData) {
         let modelViagens = new ModelViagens();
-        viagensData = await modelViagens.findByAnyField(field, value);
+        viagensData = await modelViagens.findByAnyField({ field, value, page });
         if (viagensData.length > 0)
           await redisClient.set(key, JSON.stringify(viagensData), 60000);
         modelViagens = null;
       }
 
-      await makeGenericLog({
-        authorization,
-        data: viagensData,
-        palavra_pesquisa: JSON.stringify(request.query),
-        tipo_pesquisa: request.path.replace("/", ""),
-      });
+      await redisClient.disconnect();
 
       return response
         .status(200)

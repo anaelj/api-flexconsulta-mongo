@@ -1,10 +1,9 @@
 import { createClient } from "redis";
 
-const url = process.env.REDIS_URL;
+const url = `${process.env.REDIS_URL}:${process.env.REDIS_PORT}`;
 
 const redisClient = createClient({
   url,
 });
-await redisClient.connect();
 
 export default redisClient;

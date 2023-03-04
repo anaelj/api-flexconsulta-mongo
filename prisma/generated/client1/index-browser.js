@@ -114,25 +114,6 @@ exports.Prisma.Contatos_motoristasScalarFieldEnum = makeEnum({
   motoristasId: 'motoristasId'
 });
 
-exports.Prisma.LogApiRequestValidacaoCNHScalarFieldEnum = makeEnum({
-  id: 'id',
-  data_validacao: 'data_validacao',
-  data_resposta: 'data_resposta',
-  cpf_motorista: 'cpf_motorista',
-  nome_motorista: 'nome_motorista',
-  email_usuario: 'email_usuario',
-  status_requisicao: 'status_requisicao',
-  link_photo: 'link_photo',
-  formulario_request: 'formulario_request',
-  resposta_request: 'resposta_request',
-  token_request: 'token_request',
-  tipo_request: 'tipo_request',
-  nome_cliente: 'nome_cliente',
-  cnpj_cliente: 'cnpj_cliente',
-  dt_criacao: 'dt_criacao',
-  dt_atualizacao: 'dt_atualizacao'
-});
-
 exports.Prisma.MotoristasScalarFieldEnum = makeEnum({
   id: 'id',
   nome_mot: 'nome_mot',
@@ -169,62 +150,6 @@ exports.Prisma.ProprietariosScalarFieldEnum = makeEnum({
 exports.Prisma.QueryMode = makeEnum({
   default: 'default',
   insensitive: 'insensitive'
-});
-
-exports.Prisma.Reg_temporarios_motoristasScalarFieldEnum = makeEnum({
-  id: 'id',
-  cpf_mot: 'cpf_mot',
-  idcliente: 'idcliente',
-  tipo_erro: 'tipo_erro',
-  lote_arquivo: 'lote_arquivo',
-  message: 'message',
-  dados: 'dados',
-  dt_criacao: 'dt_criacao',
-  dt_atualizacao: 'dt_atualizacao',
-  clientesId: 'clientesId'
-});
-
-exports.Prisma.Reg_temporarios_proprietariosScalarFieldEnum = makeEnum({
-  id: 'id',
-  cpf_cnpj_prop: 'cpf_cnpj_prop',
-  idcliente: 'idcliente',
-  lote_arquivo: 'lote_arquivo',
-  tipo_erro: 'tipo_erro',
-  message: 'message',
-  dados: 'dados',
-  dt_criacao: 'dt_criacao',
-  dt_atualizacao: 'dt_atualizacao',
-  clientesId: 'clientesId'
-});
-
-exports.Prisma.Reg_temporarios_veiculosScalarFieldEnum = makeEnum({
-  id: 'id',
-  placa: 'placa',
-  idcliente: 'idcliente',
-  tipo_erro: 'tipo_erro',
-  lote_arquivo: 'lote_arquivo',
-  message: 'message',
-  dados: 'dados',
-  dt_criacao: 'dt_criacao',
-  dt_atualizacao: 'dt_atualizacao',
-  clientesId: 'clientesId'
-});
-
-exports.Prisma.Reg_temporarios_viagensScalarFieldEnum = makeEnum({
-  id: 'id',
-  numero_cliente: 'numero_cliente',
-  idcliente: 'idcliente',
-  tipo_erro: 'tipo_erro',
-  lote_arquivo: 'lote_arquivo',
-  message: 'message',
-  dados: 'dados',
-  dt_criacao: 'dt_criacao',
-  dt_atualizacao: 'dt_atualizacao',
-  clientesId: 'clientesId'
-});
-
-exports.Prisma.SequelizeMetaScalarFieldEnum = makeEnum({
-  name: 'name'
 });
 
 exports.Prisma.SortOrder = makeEnum({
@@ -392,22 +317,16 @@ exports.enum_viagem = makeEnum({
 });
 
 exports.Prisma.ModelName = makeEnum({
-  SequelizeMeta: 'SequelizeMeta',
   clientes: 'clientes',
   contatos_motoristas: 'contatos_motoristas',
   motoristas: 'motoristas',
   proprietarios: 'proprietarios',
-  reg_temporarios_motoristas: 'reg_temporarios_motoristas',
-  reg_temporarios_proprietarios: 'reg_temporarios_proprietarios',
-  reg_temporarios_veiculos: 'reg_temporarios_veiculos',
-  reg_temporarios_viagens: 'reg_temporarios_viagens',
   status_motoristas: 'status_motoristas',
   status_proprietarios: 'status_proprietarios',
   status_veiculos: 'status_veiculos',
   veiculos: 'veiculos',
   viagens: 'viagens',
   VwVeiculos: 'VwVeiculos',
-  logApiRequestValidacaoCNH: 'logApiRequestValidacaoCNH',
   VwViagens: 'VwViagens',
   VwMotoristas: 'VwMotoristas',
   VwProprietarios: 'VwProprietarios'

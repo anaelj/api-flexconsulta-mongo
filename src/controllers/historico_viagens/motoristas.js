@@ -1,35 +1,32 @@
-import { makeGenericLog } from "../../share/make-history/generic.history";
 import { ModelMotoristas } from "../../models/views/vwMotoristas";
 import redisClient from "../../database/redisClient";
 
 export class CreateMotoristasController {
   async getMotoristas(request, response, next) {
-    const { cpf } = request.query;
-    const { authorization } = request.headers;
+    const { cpf, page } = request.query;
 
     try {
       if (!cpf) throw new Error("CPF is required");
+      if (!page) throw new Error("PAGE is required");
 
-      const key = `motoristas-${cpf}`;
+      const key = `motoristas-${cpf}-${page}`;
 
       let motoristasData;
+      await redisClient.connect();
       motoristasData = await redisClient.get(key);
 
       if (!motoristasData) {
         let modelMotoristas = new ModelMotoristas();
-        motoristasData = await modelMotoristas.findByCPF(cpf);
+        motoristasData = await modelMotoristas.findByCPF({
+          cpf_mot: cpf,
+          page,
+        });
+
         if (motoristasData.length > 0)
           await redisClient.set(key, JSON.stringify(motoristasData), 60000);
         modelMotoristas = null;
       }
-
-      await makeGenericLog({
-        authorization,
-        data: motoristasData,
-        palavra_pesquisa: JSON.stringify(request.query),
-        tipo_pesquisa: request.path.replace("/", ""),
-      });
-
+      await redisClient.disconnect();
       return response
         .status(200)
         .send(

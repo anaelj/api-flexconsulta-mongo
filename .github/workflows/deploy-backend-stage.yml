@@ -17,5 +17,5 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           local-dir: "./"
-          server-dir: "/apihom.flexconsulta.com.br/"
+          server-dir: "/apihom.cache.flexconsulta/"
           git-ftp-args: "--changed-only"

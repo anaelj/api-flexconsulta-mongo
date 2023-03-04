@@ -1,35 +1,32 @@
-import { makeGenericLog } from "../../share/make-history/generic.history";
 import redisClient from "../../database/redisClient";
 import { ModelProprietarios } from "../../models/views/vwProprietarios";
 
 export class CreateProprietariosController {
   async getProprietarios(request, response, next) {
-    const { cpfcnpj } = request.query;
-    const { authorization } = request.headers;
+    const { cpfcnpj, page } = request.query;
 
     try {
-      if (!cpfcnpj) throw new Error("Invalid request!");
+      if (!cpfcnpj) throw new Error("CPFCNPJ is required!");
+      if (!page) throw new Error("PAGE is required!");
 
-      const key = `proprietarios-${cpfcnpj}`;
+      const key = `proprietarios-${cpfcnpj}-${page}`;
 
       let proprietariosData;
+      await redisClient.connect();
       proprietariosData = await redisClient.get(key);
 
       if (!proprietariosData) {
         let modelProprietarios = new ModelProprietarios();
-        proprietariosData = await modelProprietarios.findByCNPJ(cpfcnpj);
+        proprietariosData = await modelProprietarios.findByCNPJ({
+          cpf_cnpj_prop: cpfcnpj,
+          page,
+        });
         if (proprietariosData.length > 0)
           await redisClient.set(key, JSON.stringify(proprietariosData), 60000);
         modelProprietarios = null;
       }
 
-      await makeGenericLog({
-        authorization,
-        data: proprietariosData,
-        palavra_pesquisa: JSON.stringify(request.query),
-        tipo_pesquisa: request.path.replace("/", ""),
-      });
-
+      await redisClient.disconnect();
       return response
         .status(200)
         .send(

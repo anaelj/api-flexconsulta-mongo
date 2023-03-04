@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "api-v1-cached-flex-3356",
+      "script": "yarn",
+      "interpreter": "none",
+      "args": "dev",
+      "watch": true
+    },
+    {
+      "name": "api-v1-cached-flex-3355",
+      "script": "yarn",
+      "interpreter": "none",
+      "args": "dev",
+      "watch": true
+    }
+  ]
+}

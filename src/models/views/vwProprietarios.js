@@ -12,10 +12,17 @@ export class ModelProprietarios {
       skip,
     });
   }
-  async findByCNPJ(cpf_cnpj_prop) {
+  async findByCNPJ({ cpf_cnpj_prop, page }) {
+    let take = Number(process.env.DEFAULT_PAGINATION);
+    let skip = page ? (page - 1) * take : 0;
     return await prisma.VwProprietarios.findMany({
+      take,
+      skip,
       where: {
         cpf_cnpj_prop,
+      },
+      orderBy: {
+        id: "asc",
       },
     });
   }

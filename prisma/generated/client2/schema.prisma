@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client2"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL_MONGO")
+}
+
+model veiculos {
+  idmongo        String              @id @default(auto()) @map("_id") @db.ObjectId
+  id             Int
+  cnpj           String
+  razaosocial    String
+  nomefantasia   String
+  placa          String
+  status_veiculo enum_status_veiculo
+}
+
+model viagens {
+  idmongo          String                 @id @default(auto()) @map("_id") @db.ObjectId
+  id               Int
+  dt_viagem        DateTime
+  mercadoria       String?
+  cidade_origem    String?
+  cidade_destino   String?
+  carreta1         String?
+  carreta2         String?
+  carreta3         String?
+  carreta4         String?
+  idmotorista      Int
+  nome_mot         String
+  cpf_mot          String
+  idveiculo        Int
+  placa            String
+  idproprietario   Int
+  nome_prop        String
+  cpf_cnpj_prop    String
+  cnpj             String
+  razaosocial      String?
+  nomefantasia     String?
+  status_motorista enum_status_motorista?
+}
+
+model motoristas {
+  idmongo          String                @id @default(auto()) @map("_id") @db.ObjectId
+  id               Int
+  cnpj             String
+  razaosocial      String?
+  nomefantasia     String?
+  nome_mot         String
+  cpf_mot          String
+  status_motorista enum_status_motorista
+
+  @@unique(fields: [cpf_mot], name: "uq_motorista")
+}
+
+model proprietarios {
+  idmongo             String                   @id @default(auto()) @map("_id") @db.ObjectId
+  id                  Int
+  cnpj                String
+  razaosocial         String?
+  nomefantasia        String?
+  nome_prop           String
+  cpf_cnpj_prop       String
+  status_proprietario enum_status_proprietario
+}
+
+enum enum_status_motorista {
+  Ativo     @map("0")
+  Vencido   @map("1")
+  Bloqueado @map("2")
+}
+
+enum enum_status_proprietario {
+  Ativo     @map("0")
+  Vencido   @map("1")
+  Bloqueado @map("2")
+}
+
+enum enum_status_veiculo {
+  Ativo     @map("0")
+  Vencido   @map("1")
+  Bloqueado @map("2")
+}
+
+enum enum_viagem {
+  N
+  S
+}
