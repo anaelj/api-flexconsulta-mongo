@@ -18,5 +18,15 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           local-dir: "./"
-          server-dir: "/api.cache.flexconsulta/"
+          server-dir: "./api.cache.flexconsulta/"
           git-ftp-args: "--changed-only"
+      - name: Install Dependencies
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_SERVER }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd /var/www/group-apis/api.cache.flexconsulta
+            yarn
+            yarn prisma generate --schema ./prisma/schema1.prisma
