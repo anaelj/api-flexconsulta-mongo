@@ -12,6 +12,19 @@ export class ModelProprietarios {
       skip,
     });
   }
+
+  async findByID({ id }) {
+    try{
+    return await prisma.proprietarios.findFirst({
+      where: {
+        id : parseInt(id),
+      }
+    });
+    }catch(err){
+      console.log(err)
+    }
+  }
+
   async findByCNPJ({ cpf_cnpj_prop, page }) {
     let take = Number(process.env.DEFAULT_PAGINATION);
     let skip = page ? (page - 1) * take : 0;

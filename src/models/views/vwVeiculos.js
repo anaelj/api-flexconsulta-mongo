@@ -26,4 +26,16 @@ export class ModelVeiculos {
       },
     });
   }
+  
+  async findByID({ id }) {
+    try{
+    return await prisma.veiculos.findFirst({
+      where: {
+        id : parseInt(id),
+      }
+    });
+    }catch(err){
+      console.log(err)
+    }
+  }
 }

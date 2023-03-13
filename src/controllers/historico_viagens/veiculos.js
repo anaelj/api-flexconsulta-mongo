@@ -3,13 +3,13 @@ import { ModelVeiculos } from "../../models/views/vwVeiculos";
 
 export class CreateVeiculosController {
   async getVeiculos(request, response, next) {
-    const { placa, page } = request.query;
+    const { id, page } = request.query;
 
     try {
-      if (!placa) throw new Error("PLACA is required!");
-      if (!page) throw new Error("PAGE is required!");
+      if (!id || isNaN(parseInt(id))) throw new Error("ID do veiculo is required and must be a integer!");
+      if (!page || isNaN(parseInt(page))) throw new Error("PAGE is required and must be a integer!");
 
-      const key = `veiculos-${placa}-${page}`;
+      const key = `veiculos-${id}-${page}`;
 
       let veiculosData;
       await redisClient.connect();
@@ -17,7 +17,16 @@ export class CreateVeiculosController {
 
       if (!veiculosData) {
         let modelVeiculos = new ModelVeiculos();
-        veiculosData = await modelVeiculos.findByPlaca({ placa, page });
+        let veiculo = await modelVeiculos.findByID({ id });
+        
+        if(!veiculo){
+          await redisClient.disconnect();
+          return response
+          .status(200)
+          .send({ message: "no data" });
+        }
+
+        veiculosData = await modelVeiculos.findByPlaca({ placa : veiculo.placa , page });
         if (veiculosData.length > 0)
           await redisClient.set(key, JSON.stringify(veiculosData), 60000);
         modelVeiculos = null;

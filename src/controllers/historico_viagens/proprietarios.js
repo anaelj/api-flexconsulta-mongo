@@ -3,13 +3,13 @@ import { ModelProprietarios } from "../../models/views/vwProprietarios";
 
 export class CreateProprietariosController {
   async getProprietarios(request, response, next) {
-    const { cpfcnpj, page } = request.query;
+    const { id, page } = request.query;
 
     try {
-      if (!cpfcnpj) throw new Error("CPFCNPJ is required!");
-      if (!page) throw new Error("PAGE is required!");
+      if (!id || isNaN(parseInt(id))) throw new Error("ID do veiculo is required and must be a integer!");
+      if (!page || isNaN(parseInt(page))) throw new Error("PAGE is required and must be a integer!");
 
-      const key = `proprietarios-${cpfcnpj}-${page}`;
+      const key = `proprietarios-${id}-${page}`;
 
       let proprietariosData;
       await redisClient.connect();
@@ -17,8 +17,20 @@ export class CreateProprietariosController {
 
       if (!proprietariosData) {
         let modelProprietarios = new ModelProprietarios();
+        let proprietario = await modelProprietarios.findByID({
+          id: id,
+          page,
+        });
+
+        if(!proprietario){
+          await redisClient.disconnect();
+          return response
+          .status(200)
+          .send({ message: "no data" });
+        }
+
         proprietariosData = await modelProprietarios.findByCNPJ({
-          cpf_cnpj_prop: cpfcnpj,
+          cpf_cnpj_prop: proprietario.cpf_cnpj_prop,
           page,
         });
         if (proprietariosData.length > 0)

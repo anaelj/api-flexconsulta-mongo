@@ -3,13 +3,13 @@ import redisClient from "../../database/redisClient";
 
 export class CreateMotoristasController {
   async getMotoristas(request, response, next) {
-    const { cpf, page } = request.query;
+    const { id, page } = request.query;
 
     try {
-      if (!cpf) throw new Error("CPF is required");
-      if (!page) throw new Error("PAGE is required");
+      if (!id || isNaN(parseInt(id))) throw new Error("ID do veiculo is required and must be a integer!");
+      if (!page || isNaN(parseInt(page))) throw new Error("PAGE is required and must be a integer!");
 
-      const key = `motoristas-${cpf}-${page}`;
+      const key = `motoristas-${id}-${page}`;
 
       let motoristasData;
       await redisClient.connect();
@@ -17,8 +17,20 @@ export class CreateMotoristasController {
 
       if (!motoristasData) {
         let modelMotoristas = new ModelMotoristas();
+
+        let mototista = await modelMotoristas.findByID({
+          id: id
+        })
+
+        if(!mototista){
+          await redisClient.disconnect();
+          return response
+          .status(200)
+          .send({ message: "no data" });
+        }
+
         motoristasData = await modelMotoristas.findByCPF({
-          cpf_mot: cpf,
+          cpf_mot: mototista.cpf_mot,
           page,
         });
 

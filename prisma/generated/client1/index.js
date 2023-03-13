@@ -80,8 +80,8 @@ const regularDirname = hasDirname && fs.existsSync(path.join(__dirname, 'schema.
 
 // if the client has been bundled, we need to look for the folders
 const foundDirname = !regularDirname && findSync(process.cwd(), [
-    "prisma/generated/client1",
-    "generated/client1",
+    "prisma\\generated\\client1",
+    "generated\\client1",
 ], ['d'], ['d'], 1)[0]
 
 const dirname = regularDirname || foundDirname || __dirname
@@ -351,21 +351,26 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/anael.medeiros/Documents/Anael/Novel/api-flexconsulta-mongo/prisma/generated/client1",
+      "value": "C:\\Users\\Guts\\Desktop\\API ANAEL\\api-flexconsulta-cache\\prisma\\generated\\client1",
       "fromEnvVar": null
     },
     "config": {
       "engineType": "library"
     },
-    "binaryTargets": [],
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "windows"
+      }
+    ],
     "previewFeatures": [],
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": "..\\..\\..\\.env",
+    "schemaEnvPath": "..\\..\\..\\.env"
   },
-  "relativePath": "../..",
+  "relativePath": "..\\..",
   "clientVersion": "4.9.0",
   "engineVersion": "ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5",
   "datasourceNames": [
@@ -391,7 +396,7 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
-path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
-path.join(process.cwd(), "prisma/generated/client1/libquery_engine-darwin-arm64.dylib.node")
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "prisma\\generated\\client1\\query_engine-windows.dll.node")
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "prisma/generated/client1/schema.prisma")
+path.join(process.cwd(), "prisma\\generated\\client1\\schema.prisma")
